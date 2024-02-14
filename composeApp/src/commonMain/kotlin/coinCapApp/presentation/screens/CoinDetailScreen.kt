@@ -22,6 +22,9 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import coinCapApp.data.models.CoinItem
 import coinCapApp.data.remote.HttpRoutes
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.DecimalMode
+import com.ionspin.kotlin.bignum.decimal.RoundingMode
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 
@@ -39,12 +42,16 @@ class CoinDetailScreen(
                 .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            
+            val priceUsd = BigDecimal.fromDouble(coinItem.priceUsd)
+            val formattedPrice = priceUsd.roundSignificand(DecimalMode(2, RoundingMode.CEILING)).toPlainString()
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
                     modifier = Modifier,
                     onClick = onBack,
                     content = { Icon(imageVector = Icons.Default.ArrowBack, tint = Color.White, contentDescription = null) },
-                    )
+                )
                 Text(
                     modifier = Modifier.fillMaxWidth().padding(end = 20.dp),
                     text = "${coinItem.name}(${coinItem.symbol})",
@@ -61,11 +68,11 @@ class CoinDetailScreen(
             )
             Text(
                 modifier = Modifier.padding(20.dp),
-                text = "$${coinItem.priceUsd}".dropLast(10),
+                text = "$${formattedPrice}",
                 color = Color.White,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                )
+            )
         }
     }
 }
