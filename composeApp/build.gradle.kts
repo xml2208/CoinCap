@@ -43,6 +43,7 @@ kotlin {
             implementation(compose.ui)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
+            implementation(libs.big.decimal)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.logging)
             implementation(libs.kotlinx.serialization)

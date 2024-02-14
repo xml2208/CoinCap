@@ -18,6 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coinCapApp.data.models.CoinItem
 import coinCapApp.data.remote.HttpRoutes
+import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.DecimalMode
+import com.ionspin.kotlin.bignum.decimal.RoundingMode
+import com.ionspin.kotlin.bignum.integer.BigInteger
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 
@@ -31,47 +35,49 @@ fun CoinItem(
             .clickable { onClick(coinItem) }
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
-        ) {
+    ) {
         KamelImage(
             modifier = Modifier.size(40.dp),
-            resource = asyncPainterResource(HttpRoutes.GET_ICONS+coinItem.symbol.lowercase()),
+            resource = asyncPainterResource(HttpRoutes.GET_ICONS + coinItem.symbol.lowercase()),
             contentDescription = null
         )
 
-            Column(modifier = Modifier.padding(horizontal = 10.dp).weight(2f).fillMaxWidth()) {
-                Text(
-                    text = coinItem.name,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = coinItem.symbol,
-                    fontSize = 16.sp
-                )
-            }
+        Column(modifier = Modifier.padding(horizontal = 10.dp).weight(2f).fillMaxWidth()) {
+            Text(
+                text = coinItem.name,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = coinItem.symbol,
+                fontSize = 16.sp
+            )
+        }
 
-            Column(
-                modifier = Modifier.weight(1f).fillMaxWidth(),
-                horizontalAlignment = Alignment.End
+        Column(
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+            horizontalAlignment = Alignment.End
+        ) {
+            val priceUsd = BigDecimal.fromDouble(coinItem.priceUsd)
+            val formattedPrice = priceUsd.roundSignificand(DecimalMode(2, RoundingMode.CEILING)).toPlainString()
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "$$formattedPrice",
+                fontSize = 20.sp,
+                textAlign = TextAlign.End,
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
             ) {
+                SetChangeUsdIcon(coinItem.changePercent24Hr.toString())
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "$${coinItem.priceUsd}".dropLast(10),
-                    fontSize = 20.sp,
+                    text = coinItem.changePercent24Hr.toString().dropLast(14) + "%",
                     textAlign = TextAlign.End,
-                    )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    SetChangeUsdIcon(coinItem.changePercent24Hr.toString())
-                    Text(
-                        text = coinItem.changePercent24Hr.toString().dropLast(14) + "%",
-                        textAlign = TextAlign.End,
-                        )
-                }
+                )
             }
+        }
     }
     Divider(modifier = Modifier.padding(horizontal = 20.dp))
 }
@@ -86,7 +92,7 @@ fun SetChangeUsdIcon(amount: String) {
         )
     } else {
         Icon(
-            modifier =  Modifier,
+            modifier = Modifier,
             imageVector = Icons.Default.KeyboardArrowUp,
             tint = Color.Green,
             contentDescription = null
