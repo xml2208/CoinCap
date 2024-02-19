@@ -53,5 +53,6 @@ class CoinViewModel : StateScreenModel<CoinState>(CoinState.Loading) {
         }
     }
 
-
+    fun topCoins() = allCoins.subList(0, 13)
+    
 }

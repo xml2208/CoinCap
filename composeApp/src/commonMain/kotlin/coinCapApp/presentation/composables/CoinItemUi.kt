@@ -21,7 +21,6 @@ import coinCapApp.data.remote.HttpRoutes
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
-import com.ionspin.kotlin.bignum.integer.BigInteger
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 
@@ -36,11 +35,8 @@ fun CoinItem(
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        KamelImage(
-            modifier = Modifier.size(40.dp),
-            resource = asyncPainterResource(HttpRoutes.GET_ICONS + coinItem.symbol.lowercase()),
-            contentDescription = null
-        )
+
+        CoinIconBlock(symbol = coinItem.symbol)
 
         Column(modifier = Modifier.padding(horizontal = 10.dp).weight(2f).fillMaxWidth()) {
             Text(
@@ -63,18 +59,20 @@ fun CoinItem(
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = "$$formattedPrice",
-                fontSize = 20.sp,
+                fontSize = 18.sp,
                 textAlign = TextAlign.End,
+                fontWeight = FontWeight.Bold,
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
-                SetChangeUsdIcon(coinItem.changePercent24Hr.toString())
+                UsdChangeIcon(coinItem.changePercent24Hr.toString())
                 Text(
                     text = coinItem.changePercent24Hr.toString().dropLast(14) + "%",
                     textAlign = TextAlign.End,
+                    color = setChangingUsdTextColor(coinItem.changePercent24Hr.toString())
                 )
             }
         }
@@ -82,9 +80,11 @@ fun CoinItem(
     Divider(modifier = Modifier.padding(horizontal = 20.dp))
 }
 
+fun isChangingPositively(amount: String) = !amount.startsWith('-')
+
 @Composable
-fun SetChangeUsdIcon(amount: String) {
-    if (amount.startsWith('-')) {
+fun UsdChangeIcon(amount: String) {
+    if (!isChangingPositively(amount)) {
         Icon(
             imageVector = Icons.Default.ArrowDropDown,
             tint = Color.Red,
@@ -99,3 +99,18 @@ fun SetChangeUsdIcon(amount: String) {
         )
     }
 }
+
+@Composable
+fun setChangingUsdTextColor(amount: String): Color =
+    if (isChangingPositively(amount)) Color.Green else Color.Red
+
+@Composable
+fun CoinIconBlock(
+    symbol: String,
+    modifier: Modifier = Modifier,
+) =
+    KamelImage(
+        modifier = modifier.size(40.dp),
+        resource = asyncPainterResource(HttpRoutes.GET_ICONS + symbol.lowercase()),
+        contentDescription = null
+    )

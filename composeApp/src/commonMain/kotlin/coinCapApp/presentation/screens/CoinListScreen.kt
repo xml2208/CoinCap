@@ -39,7 +39,12 @@ class CoinListScreen : Screen {
                     onValueChange = screenModel::onSearchChange,
                     coins = state.coinList,
                     onClick = { item ->
-                        navigator.push(CoinDetailScreen(coinItem = item, onBack = { navigator.pop() }))
+                        navigator.push(
+                            CoinDetailScreen(
+                                topCoins = screenModel.topCoins(),
+                                coinItem = item,
+                                onBack = { navigator.pop() })
+                        )
                     }
                 )
             }
@@ -53,7 +58,7 @@ class CoinListScreen : Screen {
         coins: List<CoinItem>,
         onClick: (CoinItem) -> Unit,
         onValueChange: (String) -> Unit,
-        ) {
+    ) {
         Column {
             SearchUi(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
