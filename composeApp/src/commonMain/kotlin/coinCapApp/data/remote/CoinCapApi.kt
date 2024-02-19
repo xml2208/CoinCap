@@ -3,10 +3,15 @@ package coinCapApp.data.remote
 import coinCapApp.data.models.CoinCapResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 
 
-class CryptoApi(private val client: HttpClient) {	
+class CoinCapApi(private val client: HttpClient) {
+
     suspend fun getCoins(): CoinCapResponse = client.get(HttpRoutes.GET_ASSETS).body<CoinCapResponse>()
 }
 

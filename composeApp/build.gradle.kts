@@ -54,6 +54,8 @@ kotlin {
             implementation(libs.ktor.client.serialization)
             implementation(libs.ktor.kotlinx.serialization)
             implementation(libs.kamel.image)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
         }
     }
 }
