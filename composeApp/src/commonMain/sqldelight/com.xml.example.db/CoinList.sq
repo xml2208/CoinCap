@@ -1,0 +1,14 @@
+CREATE TABLE coinEntity (
+    id TEXT PRIMARY KEY NOT NULL,
+    symbol TEXT,
+    name TEXT,
+    priceUsd TEXT,
+    rank TEXT,
+    changePercent24Hr TEXT
+);
+
+insertCoinList:
+INSERT INTO coinEntity VALUES ?;
+
+getCoinList:
+SELECT * FROM coinEntity; 

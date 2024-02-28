@@ -5,7 +5,17 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.sqldelight)
     kotlin("plugin.serialization")
+}
+
+sqldelight {
+    databases {
+        create("Database") {
+            generateAsync = true
+            packageName.set("com.xml.example.db")
+        }
+    }
 }
 
 kotlin {
@@ -34,6 +44,7 @@ kotlin {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.sqldelight.android)
             
         }
         commonMain.dependencies {
@@ -56,6 +67,11 @@ kotlin {
             implementation(libs.kamel.image)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.sqldelight.coroutines)
+
+        }
+        iosMain.dependencies {
+            implementation(libs.sqldelight.ios)
         }
     }
 }

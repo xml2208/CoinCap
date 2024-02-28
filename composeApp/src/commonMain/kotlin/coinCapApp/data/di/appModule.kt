@@ -1,5 +1,6 @@
 package coinCapApp.presentation.coinCapApp.data.di
 
+import app.cash.sqldelight.db.SqlDriver
 import coinCapApp.data.remote.CoinCapApi
 import coinCapApp.data.remote.CoinsRemoteDataSource
 import coinCapApp.presentation.coinCapApp.data.CoinRepository
@@ -27,5 +28,9 @@ val appModule = module {
     singleOf(::CoinRepository)
     
     singleOf(::GetCoinsUseCase)
+    
+//    single<SqlDriver> {
+//        
+//    }
 
 }
