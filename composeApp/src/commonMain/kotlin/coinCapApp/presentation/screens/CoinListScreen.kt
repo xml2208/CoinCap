@@ -51,7 +51,7 @@ class CoinListScreen : Screen {
                     onClick = { item ->
                         navigator.push(
                             CoinDetailScreen(
-                                topCoins = screenModel.topCoins(),
+                                topCoins = screenModel.topCoinList(),
                                 coinItem = item,
                                 onBack = { navigator.pop() })
                         )

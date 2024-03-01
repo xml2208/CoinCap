@@ -49,6 +49,7 @@ class CoinViewModel(
         }
     }
 
-    fun topCoins() = allCoins.subList(0, 13)
+    fun topCoinList() = allCoins
+        .filter { item -> item.rank.toInt() in 0..10 }
     
 }
