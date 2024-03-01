@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import coinCapApp.data.models.CoinItem
 import coinCapApp.presentation.coinCapApp.domain.GetCoinsUseCase
 import coinCapApp.presentation.coinCapApp.domain.InsertCoinsUseCase
+import io.github.aakira.napier.Napier
 
 class CoinViewModel(
     private val getCoinsUseCase: GetCoinsUseCase,
@@ -24,12 +25,13 @@ class CoinViewModel(
 
     suspend fun getCoins() {
         try {
-            getCoinsUseCase.invoke()?.collect {
-                allCoins = it
+            getCoinsUseCase.invoke()?.collect { localData ->
+                Napier.d(message = "LocalDataList size: ${localData.size}", tag = "xml2208")
+                allCoins = localData
                 mutableState.value = CoinState.Success(coinList = allCoins)
             }
         } catch (e: Exception) {
-            println(e.message)
+            Napier.e(message = e.toString(), tag = "xml2208")
             mutableState.value = CoinState.Error(errorMessage = e.message.toString())
         }
     }

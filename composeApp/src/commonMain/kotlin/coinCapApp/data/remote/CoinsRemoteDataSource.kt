@@ -1,6 +1,7 @@
 package coinCapApp.data.remote
 
 import coinCapApp.data.models.CoinCapResponse
+import io.github.aakira.napier.Napier
 
 class CoinsRemoteDataSource(
     private val coinApi: CoinCapApi,
@@ -10,7 +11,9 @@ class CoinsRemoteDataSource(
         return try {
             coinApi.getCoins()
         } catch (e: Exception) {
+            Napier.e(e.message.toString())
             CoinCapResponse(emptyList())
         }
     }
+    
 }

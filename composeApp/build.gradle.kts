@@ -69,6 +69,7 @@ kotlin {
             implementation(libs.kamel.image)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.napier.logging)
             implementation(libs.sqldelight.coroutines)
 
         }
