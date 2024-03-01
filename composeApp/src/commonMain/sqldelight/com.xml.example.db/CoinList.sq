@@ -8,7 +8,7 @@ CREATE TABLE coinEntity (
 );
 
 insertCoinList:
-INSERT INTO coinEntity VALUES ?;
+INSERT OR REPLACE INTO coinEntity VALUES ?;
 
 getCoinList:
 SELECT * FROM coinEntity; 

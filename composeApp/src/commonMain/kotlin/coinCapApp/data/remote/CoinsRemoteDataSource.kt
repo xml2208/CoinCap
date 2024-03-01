@@ -1,16 +1,16 @@
 package coinCapApp.data.remote
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.withContext
+import coinCapApp.data.models.CoinCapResponse
 
 class CoinsRemoteDataSource(
     private val coinApi: CoinCapApi,
 ) {
 
-    suspend fun getCoinList() =
-        withContext(Dispatchers.IO) {
+    suspend fun getCoinsResponse(): CoinCapResponse {
+        return try {
             coinApi.getCoins()
+        } catch (e: Exception) {
+            CoinCapResponse(emptyList())
         }
-
+    }
 }

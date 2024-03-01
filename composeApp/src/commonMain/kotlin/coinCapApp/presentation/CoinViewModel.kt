@@ -9,27 +9,32 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import coinCapApp.data.models.CoinItem
 import coinCapApp.presentation.coinCapApp.domain.GetCoinsUseCase
+import coinCapApp.presentation.coinCapApp.domain.InsertCoinsUseCase
 
 class CoinViewModel(
     private val getCoinsUseCase: GetCoinsUseCase,
+    private val insertCoinsUseCase: InsertCoinsUseCase,
 ) : StateScreenModel<CoinState>(CoinState.Loading) {
 
     private val _query = MutableStateFlow("")
     val query = _query
     private var allCoins by mutableStateOf<List<CoinItem>>(emptyList())
 
+    suspend fun insertList() = insertCoinsUseCase()
 
     suspend fun getCoins() {
         try {
-            allCoins = getCoinsUseCase.invoke()
-            mutableState.value = CoinState.Success(coinList = allCoins)
+            getCoinsUseCase.invoke()?.collect {
+                allCoins = it
+                mutableState.value = CoinState.Success(coinList = allCoins)
+            }
         } catch (e: Exception) {
             println(e.message)
             mutableState.value = CoinState.Error(errorMessage = e.message.toString())
         }
     }
 
-    private suspend fun executeSearch(): List<CoinItem> = getCoinsUseCase.invoke().filter { it.checkMatching(_query.value) }
+    private fun executeSearch(): List<CoinItem> = allCoins.filter { it.checkMatching(_query.value) }
 
     fun onSearchChange(text: String) {
         _query.value = text

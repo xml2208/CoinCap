@@ -26,7 +26,7 @@ data class CoinItem(
             query.contains(it, ignoreCase = true)
         }
     }
-    
+
 }
 
 fun CoinItem.toDomain(): CoinEntity =
@@ -37,4 +37,14 @@ fun CoinItem.toDomain(): CoinEntity =
         name = name,
         priceUsd = priceUsd.toString(),
         changePercent24Hr = changePercent24Hr.toString()
+    )
+
+fun CoinEntity.toUiItem(): CoinItem =
+    CoinItem(
+        id = id,
+        symbol = symbol ?: "",
+        rank = rank ?: "",
+        name = name ?: "",
+        priceUsd = priceUsd?.toDouble() ?: 0.0,
+        changePercent24Hr = changePercent24Hr?.toDouble() ?: 0.0
     )

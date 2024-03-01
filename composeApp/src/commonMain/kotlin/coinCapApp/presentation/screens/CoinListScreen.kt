@@ -16,6 +16,7 @@ import coinCapApp.data.models.CoinItem
 import coinCapApp.presentation.CoinState
 import coinCapApp.presentation.CoinViewModel
 import coinCapApp.presentation.coinCapApp.domain.GetCoinsUseCase
+import coinCapApp.presentation.coinCapApp.domain.InsertCoinsUseCase
 import coinCapApp.presentation.composables.CoinItem
 import coinCapApp.presentation.composables.SearchUi
 import org.koin.compose.koinInject
@@ -25,11 +26,18 @@ class CoinListScreen : Screen {
     @Composable
     override fun Content() {
         val getCoinsUseCase = koinInject<GetCoinsUseCase>()
-        val screenModel = rememberScreenModel { CoinViewModel(getCoinsUseCase) }
+        val insertCoinsUseCase = koinInject<InsertCoinsUseCase>()
+        val screenModel = rememberScreenModel {
+            CoinViewModel(
+                getCoinsUseCase = getCoinsUseCase,
+                insertCoinsUseCase = insertCoinsUseCase
+            )
+        }
         val navigator = LocalNavigator.currentOrThrow
         val query = screenModel.query.collectAsState().value
 
         LaunchedEffect("key1") {
+            screenModel.insertList()
             screenModel.getCoins()
         }
 
