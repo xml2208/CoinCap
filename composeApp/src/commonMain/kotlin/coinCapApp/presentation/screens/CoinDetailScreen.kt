@@ -32,6 +32,7 @@ import coinCapApp.presentation.composables.CoinIconBlock
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
+import io.github.aakira.napier.Napier
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kotlinx.coroutines.delay
@@ -72,7 +73,8 @@ class CoinDetailScreen(
             TopCoinsBlock(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .padding(10.dp))
+                    .padding(10.dp)
+            )
         }
     }
 
@@ -104,26 +106,30 @@ class CoinDetailScreen(
     @Composable
     private fun TopCoinsBlock(modifier: Modifier) {
         val state = rememberLazyListState()
-        var scrollDirection by remember { mutableStateOf(1) }
-
+        var scrollDirection by remember { mutableStateOf(0) }
+        val isReachedEnd = derivedStateOf {
+            val lastVisibleItem = state.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem?.index != 0 && lastVisibleItem?.index == state.layoutInfo.totalItemsCount - 1
+        }
         LaunchedEffect(Unit) {
             val scrollableItems = topCoins.size - state.layoutInfo.visibleItemsInfo.size + 1
             val scrollWidth = scrollableItems * (COIN_ICONS_PADDING + COIN_ICON_WIDTH)
-                delay(800L)
-                while (true) {
-                    state.animateScrollBy(
-                        value = (scrollDirection * scrollWidth).toFloat(),
-                        animationSpec = tween(
-                            durationMillis = 4000,
-                            easing  = LinearEasing
-                        )
+            delay(100L)
+            while (true) {
+                state.animateScrollBy(
+                    value = (scrollDirection * scrollWidth).toFloat(),
+                    animationSpec = tween(
+                        durationMillis = 3000,
+                        easing = LinearEasing
                     )
-                    scrollDirection *= 1
-                }
+                )
+                    if (isReachedEnd.value) scrollDirection += -1 else scrollDirection += 1
             }
+        }
 
         Column(modifier = modifier) {
             Text(
+                modifier = Modifier.clickable { Napier.d("isReached: ${isReachedEnd.value}") },
                 text = "TOP COINS:",
                 fontWeight = FontWeight.Bold,
             )
