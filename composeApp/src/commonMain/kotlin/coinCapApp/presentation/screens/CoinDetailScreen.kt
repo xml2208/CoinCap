@@ -123,7 +123,7 @@ class CoinDetailScreen(
                         easing = LinearEasing
                     )
                 )
-                    if (isReachedEnd.value) scrollDirection += -1 else scrollDirection += 1
+                scrollDirection += if (isReachedEnd.value) -1 else 1
             }
         }
 
